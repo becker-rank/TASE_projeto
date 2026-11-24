@@ -1,30 +1,21 @@
 from machine import Pin, PWM
 import time
+import config
+import _thread
+import transmission
+import reception
 
-trans_pin = 16   #gpio 17 , pin 22
-receive_pin = 17 #gpio 16, pin 21
+# Transmissão no segundo núcleo
+_thread.start_new_thread(transmission.trans, ())
+
+# Recepção no núcleo principal
+reception.rec()
+# 3. Wait for both threads to finish before continuing
+
 
 #tx = Pin(trans_pin, Pin.OUT)
-rx = Pin(receive_pin, Pin.IN)
-tx = PWM(Pin(16), freq=1000, duty_u16=32768)
 #tx.on()
-T = 1000000 #time in microseconds
 while(1):
-    print("sinal recebido: ", rx.value())
-    
-    #ponto
-    tx.duty_u16(32768)
-    time.sleep_us(T)
-    
-    # Pausa entre os sinais da letra
-    tx.duty_u16(0)
-    time.sleep_us(T)
-
-   # Traço
-    tx.duty_u16(32768)
-    time.sleep_us(3 * T)
-    
-    tx.duty_u16(0)
-    time.sleep_us(T)
+    x =1
 
     
