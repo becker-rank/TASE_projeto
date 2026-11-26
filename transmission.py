@@ -1,10 +1,25 @@
+import time
+from machine import Pin, PWM
+
 import config
-from machine import PWM, Pin
 
 
 def trans():
-    tx = PWM(Pin(config.txPin), freq=100_000, duty_u16=32768)
+    tx = PWM(Pin(config.txPin), freq=config.PWM_FREQ_HZ, duty_u16=config.PWM_DUTY_OFF)
     print("PWM configurado no GPIO", config.txPin)
 
-    while(1):
-        tx.duty_u16(32768)
+    while True:
+        # Ponto
+        tx.duty_u16(config.PWM_DUTY_ON)
+        time.sleep_us(config.T)
+
+        # Pausa entre os sinais da letra
+        tx.duty_u16(config.PWM_DUTY_OFF)
+        time.sleep_us(config.T)
+
+        # Traço
+        tx.duty_u16(config.PWM_DUTY_ON)
+        time.sleep_us(config.DASH_DURATION_US)
+
+        tx.duty_u16(config.PWM_DUTY_OFF)
+        time.sleep_us(config.T)
